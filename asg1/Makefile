@@ -6,14 +6,7 @@ NEEDINCL    = ${filter ${NOINCL}, ${MAKECMDGOALS}}
 GMAKE       = ${MAKE} --no-print-directory
 UNAME      ?= ${shell uname -s}
 
-ifeq (${UNAME},SunOS)
-COMPILE  = CC -g -features=extensions
-MAKEDEPS = CC -xM1
-endif
-ifeq (${UNAME},Linux)
 COMPILE  = gcc -g -O0 -Wall -Wextra -Werror
-MAKEDEPS = gcc -MM
-endif
 
 SOURCE      = main.c 
 #HEADER      = stringtable.h strhash.h
