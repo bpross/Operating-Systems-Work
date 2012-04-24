@@ -6,7 +6,7 @@ NEEDINCL    = ${filter ${NOINCL}, ${MAKECMDGOALS}}
 GMAKE       = ${MAKE} --no-print-directory
 UNAME      ?= ${shell uname -s}
 
-COMPILE  = gcc -g -O0 -Wall -Wextra -Werror
+COMPILE  = gcc -g -O0 
 
 SOURCE      = main.c 
 #HEADER      = stringtable.h strhash.h
