@@ -8,7 +8,7 @@ UNAME      ?= ${shell uname -s}
 
 COMPILE  = gcc -g -O0 
 
-SOURCE      = main.c 
+SOURCE      = shell.c 
 #HEADER      = stringtable.h strhash.h
 EXECBIN     = bshell
 OBJECTS     = ${SOURCE:.c=.o}
