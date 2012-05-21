@@ -130,7 +130,8 @@ void execute_re_in(char **args, char *file)
     }
     else if(pid == 0)
     {
-        dup2(in_file,0);
+        close(0);
+        dup(in_file);
         close(in_file);
         if (execvp(*args, args) < 0)
         {
@@ -153,7 +154,7 @@ void check_for_meta(char **args)
 {
     int i;
     char *file;
-   
+    int found = 0; 
     for(i=0;i < 64 && args[i] != NULL; ++i)
     {
         if(strcmp(args[i], ">") == 0)
@@ -162,6 +163,7 @@ void check_for_meta(char **args)
             args[i] = '\0';
             args[i+1] = '\0';
             execute_re_out(args, file);
+            found = 1;
         }
         else if(strcmp(args[i], "<") == 0)
         {   
@@ -169,10 +171,16 @@ void check_for_meta(char **args)
             args[i] = '\0';
             args[i+1] = '\0';
             execute_re_in(args, file);
+            found = 1;
         }
         else if(strcmp(args[i], "|") == 0)
+        {
             printf("Pipe detected\n");
+            found = 1;
+        }
     }
+    if (found == 0)
+        execute(args);
 }
 
 
@@ -199,7 +207,5 @@ void  main(void)
         if (strcmp(args[0], "exit") == 0)  
             exit(0);            
         check_for_meta(args);
-        execute(args);                                                                               
-
     }
 }

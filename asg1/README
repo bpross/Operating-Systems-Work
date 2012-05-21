@@ -1,0 +1,10 @@
+This is the README For asg1
+
+I did not get everything completed because I ran out of time. My file out redirection works as does commands with arguments. My file in redirection works, but it waits for CTRL-D to close. I am hoping to finish this before it is due.
+I did not get piping to work.
+Lesson learned, I will start earlier.
+
+To Run:
+gmake clean
+gmake
+./bshell
