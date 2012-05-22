@@ -13,11 +13,11 @@ leakcheck:
 	valgrind --leak-check=yes ./test
 	
 runtest:
-	@echo "\n\nCleaning Up\n\n"
+	@echo -e "\n\nCleaning Up\n\n"
 	${MAKE} clean
-	@echo "\n\nCompiling\n\n"
+	@echo -e "\n\nCompiling\n\n"
 	${MAKE} all
-	@echo "\n\nRunning Test\n\n"
+	@echo -e "\n\nRunning Test\n\n"
 	${MAKE} run
 
 	
