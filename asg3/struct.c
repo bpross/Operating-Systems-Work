@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+
 
 int IsPowerOfTwo(long x);
 int meminit(long n_bytes, unsigned int flags, int parm1, int *parm2);
@@ -19,52 +21,20 @@ int MemCount = 0;
 int main(int argc, char**argv){
 	int parm2 = 1;
 	
-	int h1 = meminit(512,0x1,1,&parm2);
-	int h2 = meminit(512,0x2,1,&parm2);
-	int h3 = meminit(512,0x4|0x00,1,&parm2);
-	int h4 = meminit(512,0x4|0x08,1,&parm2);
-	int h5 = meminit(512,0x4|0x10,1,&parm2);
-	int h6 = meminit(512,0x4|0x18,1,&parm2);
-	int i;
-	for(i=0;i<6;i++){
-		info *h;
-		switch(i){
-			case 0:
-				h=MemAllocs[h1];
-				break;
-			case 1:
-				h=MemAllocs[h2];
-				break;
-			case 2:
-				h=MemAllocs[h3];
-				break;
-			case 3:
-				h=MemAllocs[h4];
-				break;
-			case 4:
-				h=MemAllocs[h5];
-				break;
-			case 5:
-				h=MemAllocs[h6];
-				break;
-		}
-		printf("memptr: %p, n_bytes: %d, flags: %d, parm1: %d, parm2: %p\n",
-			h->memptr, h->n_bytes, h->flags, h->parm1, h->parm2);
-	}
+	int h1 = meminit(65536,0x1,12,&parm2);
 
+        info *h = MemAllocs[h1];
+		printf("memptr: %p, n_bytes: %lu, flags: %d, parm1: %d, parm2: %p\n",
+			h->memptr, h->n_bytes, h->flags, h->parm1, h->parm2);
 	
 
 	free(MemAllocs[h1]->memptr);
-	free(MemAllocs[h2]->memptr);
-	free(MemAllocs[h3]->memptr);
-	free(MemAllocs[h4]->memptr);
-	free(MemAllocs[h5]->memptr);
-	free(MemAllocs[h6]->memptr);
 	return 0;
 }
 
 int meminit(long n_bytes, unsigned int flags, int parm1, int *parm2){
 	int i;
+    long chunks = 0;
 	unsigned int f_marker = flags;
 	switch(f_marker){
 		case (0x1):
@@ -75,7 +45,8 @@ int meminit(long n_bytes, unsigned int flags, int parm1, int *parm2){
 				printf("Buddy:Invalid Size\n");
 				return -1;
 			}
-			
+			chunks = n_bytes/pow(2,parm1);
+            printf("There will be: %lu chunks\n", chunks);
 			break;
 		case (0x2):
 			printf("Slab\n");
@@ -108,6 +79,7 @@ int meminit(long n_bytes, unsigned int flags, int parm1, int *parm2){
 		MemCount++;
 		if(MemCount >=512) return -1;
 	}
+    printf("I am going to allocated: %lu bytes\n", n_bytes + chunks);
 	void *memptr = malloc(n_bytes);	
 	printf("Memcount: %d\n", MemCount);
 	info a1;

@@ -1,3 +1,4 @@
+#include <math.h>
 #include "memory.h"
 
 //Global Counter of used memory location
@@ -17,12 +18,14 @@ int meminit(long n_bytes, unsigned int flags, int parm1, int *parm2){
 				return -1;
 			}
 			
+            //calculate the extra bytes needed for bitmap overhead
+            long chunks = n_bytes/pow(2,parm1);
+            long extra_bytes = OverHeadBytes(chunks);
+            printf("There will be: %lu extra bytes needed for overhead\n", extra_bytes);
 			//Allocate Memory
-			memptr = malloc(n_bytes);
-			//*IMPORTANT: MUST ALLOCATE MORE THAN THIS
-			//FOR BUDDY ALLOCATION (n_bytes+4 ?)
-			
+			memptr = malloc(n_bytes+extra_bytes);
 			break;
+			
 		case (SLAB_ALLOC):
 			//Slab
 			//printf("Slab\n");
@@ -93,4 +96,9 @@ int meminit(long n_bytes, unsigned int flags, int parm1, int *parm2){
 //Got algorithm from explainingbinary.com
 int IsPowerOfTwo(long x){
 	return ((x!=0) && !(x&(x-1)));
+}
+
+long OverHeadBytes(long chunks)
+{
+    return ceil(chunks / BYTE_SIZE);
 }

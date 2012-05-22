@@ -20,6 +20,7 @@ typedef struct info * info_p;
 #define FREE2_ALLOC 0x4|0x08
 #define FREE3_ALLOC 0x4|0x10
 #define FREE4_ALLOC 0x4|0x18
+#define BYTE_SIZE 8
 
 //Function Declarations
 
@@ -30,6 +31,16 @@ Used for Buddy Allocation
 Returns: 0 if false, non-zero if true
 *******************************************/
 int IsPowerOfTwo(long x);
+
+/*******************************************
+Function: OverHeadBytes
+Calculates the number of bytes needed to maintain the bitmap needed
+for Buddy Allocation. Uses the ceil() function to calculate the ceiling
+of the number of chunks / BYTE_SIZE(8)
+Used for Buddy Allocation
+Returns: Number of bytes needed range: 1-X
+*******************************************/
+long OverHeadBytes(long chunks);
 
 /*******************************************
 Function: meminit
