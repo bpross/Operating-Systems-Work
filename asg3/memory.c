@@ -1,5 +1,7 @@
 #include <math.h>
 #include "memory.h"
+#include "buddy.h"
+
 
 //Global Counter of used memory location
 int MemCount = 0;
@@ -92,6 +94,71 @@ int meminit(long n_bytes, unsigned int flags, int parm1, int *parm2){
 	
 	return MemCount-1;
 }
+
+
+void *memalloc(int handle, long n_bytes){
+    struct info * h = &MemAllocs[handle];
+    printf("h:%p\n", h);
+    printf("memptr: %p, n_bytes: %lu, flags: %d, parm1: %d, parm2: %p\n",
+    h->memptr, h->n_bytes, h->flags, h->parm1, h->parm2);
+
+    long alloc_bytes = n_bytes;
+    printf("We want to allocate: %lu bytes\n", alloc_bytes);
+    
+    void *returnprt = h->memptr;
+
+    unsigned int f_marker = h->flags;
+	switch(f_marker){
+		case (BUDDY_ALLOC):
+			//Buddy
+			//printf("Buddy\n");
+            //calculate the extra bytes needed for bitmap overhead
+
+            long chunks = h->n_bytes/pow(2,h->parm1);
+            long extra_bytes = OverHeadBytes(chunks);
+
+			returnptr = buddy_alloc(h->memptr,extra_bytes,n_bytes, h->n_bytes, h->param1);
+           
+           break;
+			
+		case (SLAB_ALLOC):
+			//Slab
+			printf("Slab\n");
+			
+			break;
+		case (FREE1_ALLOC):
+			//Free Alloc 1
+			printf("Free1\n");
+		
+			break;	
+		case (FREE2_ALLOC):
+			//Free Alloc 2
+			printf("Free2\n");
+		
+			break;
+		case (FREE3_ALLOC ):
+			//Free Alloc 3
+			printf("Free3\n");
+		
+			break;
+		case (FREE4_ALLOC):
+			//Free Alloc 4
+			printf("Free4\n");
+		
+			break;
+		default:
+			//Undefined 
+			return -1;
+			break;
+	}
+    
+    
+    
+    
+    
+    return h->memptr;
+}
+
 
 //Got algorithm from explainingbinary.com
 int IsPowerOfTwo(long x){

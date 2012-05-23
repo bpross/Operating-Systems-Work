@@ -51,3 +51,11 @@ inside of the info structure
 Return: Handle to the allocated memory
 *******************************************/
 int meminit(long n_bytes, unsigned int flags, int parm1, int *parm2);
+
+/*******************************************
+Function: memalloc
+Takes handle that specifies the allocator, and the number 
+of bytes to allocate and returns them.
+Return: A void pointer to the allocated memory
+*******************************************/
+void *memalloc(int handle, long n_bytes);

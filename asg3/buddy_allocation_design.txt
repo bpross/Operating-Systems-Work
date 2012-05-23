@@ -1,0 +1,177 @@
+Algorithm for Buddy Allocation:
+
+
+// This is the algorithm that is used to find available memory using
+// the buddy allocation algorithm. 
+// Memptr is a void ptr to the total available memory.
+// num_bytes is the number of bytes that represent the bitmap
+// page_size is the minimum page size for this block of memory
+// alloc_size is the size of memory being allocated. It has been rounded up to
+// the nearest power of 2
+// total_power is the power of two that represents the total amount of memory
+// offset is used to return the bit offset, if the alloc_size is less than what
+// can be represented with one byte
+
+find_mem(memptr, num_bytes, page_size, alloc_size, total_power, offset)
+     // this checks to see if the alloc size is represented with at least 1 byte
+    if(alloc_size % (pow(2,page_size)*8) == 0)
+        for(i < num_bytes)
+            check = &memptr & ZERO
+        // if check is 0 then we know that there is free memory, but we do not
+        // yet know if it ill fit our alloc_size, so we must check
+        
+        if check is 0
+            // this checks to see if the level of memory that we are checking
+            // is greater than what we are trying to allocate
+            if alloc_power < total_power
+                // the checked memory has a higher power
+                temp_ptr = find_mem(memptr,num_bytes/2,page_size,alloc_size,total_power/2,offset)
+            else if alloc_power == total_power
+                // the checked memory has an equal power, and is free
+                mark_byte_used()
+                offset = 0
+                return memptr
+                
+        else // some memory is full so we must keep checking
+            if alloc_ower < total_power
+                // the checked memory has a higher power
+                temp_ptr = find_mem(memptr,num_bytes/2,page_size,alloc_size,total_power/2,offset)
+                if temp_ptr == NULL // not enough memory was found on the left side so we check the right
+                    temp_ptr = find_mem(memptr+num_bytes/2,num_bytes/2,page_size,alloc_size,total_power/2,offset)
+            else if alloc_pow == total_power
+                // there is not enough memory on this side
+                return NULL
+                
+        return temp
+        
+
+    else // the alloc size is smaller than one byte, ie at most 4 pages
+        if (num_bytes > 0) // this means that we are requesting an alloc size less than 1 byte, but are still
+                           // looking at mem sizes greater than 1 byte
+            for(i < num_bytes)
+                check = &memptr & ZERO
+            if check is ZERO  // there is free memory on this side
+                if(alloc_pow < total_pow)
+                    temp_ptr = find_mem(memptr,num_bytes/2,page_size,alloc_size,total_power/2,offset)
+                else
+                    error
+            else  // there might not be enough memory free, but we cant be sure yet
+                if alloc_pw < total_pow
+                // check the right side
+                    temp_ptr = find_mem(memptr,num_bytes/2,page_size,alloc_size,total_power/2,offset)
+                    if temp_ptr == NULL // not enough memory was found on the left side so we check the right
+                        temp_ptr = find_mem(memptr+num_bytes/2,num_bytes/2,page_size,alloc_size,total_power/2,offset)
+        else // this means that we are going to compare values that are less than a byte
+            if num_bytes is 0.5 // this means we are comparing half of a byte
+                check = &memptr & 128 & 64 & 32 & 16
+                if check == 0
+                    if(alloc_power < total_power) //There is free memory but this level is too big
+                        temp_ptr = find_mem(memptr,num_bytes/2,page_size,alloc_size,total_power/2,offset)
+                    else if alloc_power == total_power
+                        mark_half_byte_used()
+                        setoffset=0
+                        return memptr
+                else // there still might be free memory that will fit, but some is in use
+                    if alloc_power < total_power
+                        temp_ptr = find_mem(memptr,num_bytes/2,page_size,alloc_size,total_power/2,offset)
+                        if temp_ptr == NULL // not enough memory was found on the left side so we check the right
+                            temp_ptr = find_mem(memptr+num_bytes/2,num_bytes/2,page_size,alloc_size,total_power/2,offset)
+                    else if alloc_power == total_power
+                        check = &memptr & 8 & 4 & 2 & 1
+                        if check == 0
+                            mark_half_byte_used()
+                            offset = 4
+                            return memptr
+                        else
+                            return null
+                            
+            else if num_bytes is 0.25 // this means are comparing 2 bits
+                check = &memptr & 128 & 64
+                if check = 0
+                    if(alloc_power < total_power) //There is free memory but this level is too big
+                        temp_ptr = find_mem(memptr,num_bytes/2,page_size,alloc_size,total_power/2,offset)
+                    else if alloc_power == total_power
+                        mark_quarter_byte_used()
+                        setoffset=0
+                        return memptr
+                        
+                check = &memptr & 32 & 16
+                if check = 0
+                    if(alloc_power < total_power) //There is free memory but this level is too big
+                        temp_ptr = find_mem(memptr,num_bytes/2,page_size,alloc_size,total_power/2,offset)
+                    else if alloc_power == total_power
+                        mark_quarter_byte_used()
+                        setoffset=2
+                        return memptr
+                        
+                check = &memptr & 8 & 4
+                if check = 0
+                    if(alloc_power < total_power) //There is free memory but this level is too big
+                        temp_ptr = find_mem(memptr,num_bytes/2,page_size,alloc_size,total_power/2,offset)
+                    else if alloc_power == total_power
+                        mark_quarter_byte_used()
+                        setoffset=4
+                        return memptr
+                        
+                check = &memptr & 2 & 1
+                if check = 0
+                    if(alloc_power < total_power) //There is free memory but this level is too big
+                        temp_ptr = find_mem(memptr,num_bytes/2,page_size,alloc_size,total_power/2,offset)
+                    else if alloc_power == total_power
+                        mark_quarter_byte_used()
+                        setoffset=6
+                        return memptr
+                        
+                if check > 0
+                    return NULL
+                    
+            else if num_bytes == 0.125 // this means we are comparing 1 bit at a time
+                check = &memptr & 128
+                if check = 0
+                    mark_bit_used()
+                    setoffset=0
+                    return memptr     
+                    
+                check = &memptr & 64
+                if check = 0
+                    mark_bit_used()
+                    setoffset=1
+                    return memptr    
+                    
+                check = &memptr & 32
+                if check = 0
+                    mark_bit_used()
+                    setoffset=2
+                    return memptr     
+                    
+                check = &memptr & 16
+                if check = 0
+                    setoffset=3
+                    return memptr
+                    
+                check = &memptr & 8
+                if check = 0
+                    mark_bit_used()
+                    setoffset=4
+                    return memptr     
+                    
+                check = &memptr & 4
+                if check = 0
+                    mark_bit_used()
+                    setoffset=5
+                    return memptr    
+                    
+                check = &memptr & 2
+                if check = 0
+                    mark_bit_used()
+                    setoffset=6
+                    return memptr     
+                    
+                check = &memptr & 1
+                if check = 0
+                    mark_bit_used()
+                    setoffset=7
+                    return memptr
+                    
+                if check > 0
+                    return NULL
