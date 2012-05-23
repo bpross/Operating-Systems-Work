@@ -1,7 +1,7 @@
 MAKE = make
 
 all:
-	gcc -o test test_harness.c memory.c -lm
+	gcc -o test test_harness.c memory.c buddy.c -lm
 	
 clean:
 	rm test

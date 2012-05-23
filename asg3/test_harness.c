@@ -6,7 +6,7 @@ int main(int argc, char**argv){
 	
 	int parm1 = 12;
 	int parm2 = 1;
-	long size = 524288;
+	long size = 131072;
 	
 	//Initialize memory
 	int h1 = meminit(size,BUDDY_ALLOC,parm1,&parm2);
@@ -29,7 +29,7 @@ int main(int argc, char**argv){
 			h->memptr, h->n_bytes, h->flags, h->parm1, h->parm2);
 	}
 
-    void *testptr = memalloc(h1,512);
+    void *testptr = memalloc(h1,32768);
     printf("memptr: %p\n", testptr);
 	//Free Memory
 	free(MemAllocs[h1].memptr);

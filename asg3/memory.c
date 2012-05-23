@@ -105,19 +105,19 @@ void *memalloc(int handle, long n_bytes){
     long alloc_bytes = n_bytes;
     printf("We want to allocate: %lu bytes\n", alloc_bytes);
     
-    void *returnprt = h->memptr;
+    void *returnptr = h->memptr;
 
     unsigned int f_marker = h->flags;
 	switch(f_marker){
 		case (BUDDY_ALLOC):
 			//Buddy
-			//printf("Buddy\n");
+			printf("Buddy\n");
             //calculate the extra bytes needed for bitmap overhead
 
             long chunks = h->n_bytes/pow(2,h->parm1);
             long extra_bytes = OverHeadBytes(chunks);
 
-			returnptr = buddy_alloc(h->memptr,extra_bytes,n_bytes, h->n_bytes, h->param1);
+			returnptr = buddy_alloc(h->memptr,extra_bytes,n_bytes, h->n_bytes, h->parm1);
            
            break;
 			
@@ -148,7 +148,8 @@ void *memalloc(int handle, long n_bytes){
 			break;
 		default:
 			//Undefined 
-			return -1;
+			return NULL;
+            
 			break;
 	}
     

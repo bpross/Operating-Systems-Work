@@ -28,7 +28,7 @@ This is the meat of the buddy allocation code. The design of the algorithm
 is described in buddy_allocation_design.txt
 Returns: a void pointer to the memory of size n_bytes, or NULL if none available
 *******************************************/
-void *find_mem(void *memptr, int num_bytes, int page_size, long alloc_size, 
-               int total_power, int offset);
+void *find_mem(void *memptr, long num_bytes, int page_size, long alloc_size, 
+               long mem_size, int offset);
 
 
