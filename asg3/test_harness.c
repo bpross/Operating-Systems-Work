@@ -29,7 +29,7 @@ int main(int argc, char**argv){
 			h->memptr, h->n_bytes, h->flags, h->parm1, h->parm2);
 	}
 
-    void *testptr = memalloc(h1,32768);
+    void *testptr = memalloc(h1,16384);
     printf("memptr: %p\n", testptr);
 	//Free Memory
 	free(MemAllocs[h1].memptr);

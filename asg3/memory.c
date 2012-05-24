@@ -115,7 +115,7 @@ void *memalloc(int handle, long n_bytes){
             //calculate the extra bytes needed for bitmap overhead
 
             long chunks = h->n_bytes/pow(2,h->parm1);
-            long extra_bytes = OverHeadBytes(chunks);
+            double extra_bytes = (double)OverHeadBytes(chunks);
 
 			returnptr = buddy_alloc(h->memptr,extra_bytes,n_bytes, h->n_bytes, h->parm1);
            
