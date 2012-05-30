@@ -1,11 +1,15 @@
 MAKE = make
 
 all:
-	gcc -o test test_harness.c memory.c buddy.c -lm
-	
+	gcc -c memory.c buddy.c free_allocation.c 
+	ar rl libmem.a memory.o buddy.o free_allocation.o
+	gcc -o test test_harness.c -L . -lmem
+
 clean:
 	rm test
-	
+	rm proj3.tar.gz
+	rm libmem.a
+
 run:
 	./test
 	

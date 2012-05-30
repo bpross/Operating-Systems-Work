@@ -1,22 +1,11 @@
-/* This is assignment 3 for CMPS111 at UCSC Spring 2012
- *  * Authors: Benjamin Ross, David Lau, Vincent Wong
- *   */
-
 //Buddy Header File
 
 //Allocates memory for buddy allocation
 void *buddy_allocation(info_p handle, long n_bytes);
 
-//Frees a given memory address
-void buddy_free(info_p handle, void *freeaddr);
-
-//Given an bitmap index, find memory
-void *find_memory(long idx, info_p handle);
-
 //Looks in bit map for free bit and sends back pointer
 int find_bit(int *bitmap, long idx, long lvlsize, long size, long min_size);
 
-//Encode/Decode bitmap for usage
 void encode_bitmap(void *decoded, long overhead, int *bitmap);
 void decode_bitmap(void *encoded, long overhead, int *bitmap);
 

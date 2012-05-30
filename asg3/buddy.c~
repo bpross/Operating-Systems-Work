@@ -1,6 +1,3 @@
-/* This is assignment 3 for CMPS111 at UCSC Spring 2012
- * Authors: Benjamin Ross, David Lau, Vincent Wong
- */
 #include "memory.h"
 #include "buddy.h"
 void *buddy_allocation(info_p handle, long n_bytes){
@@ -28,44 +25,8 @@ void *buddy_allocation(info_p handle, long n_bytes){
 
   decode_bitmap(handle->memptr-handle->overhead, handle->overhead, bitmap);
 
-  printf("Buddy Alloc: Allocated Space at %p\n", returnptr);
-
   return returnptr;
 }
-
-void buddy_free(info_p handle, void *freeaddr){
-  //printf("Buddy free\n");
-  //printf("n_bytes, %lu\n", handle->n_bytes);
-  //Find level and subindex of memory
-  int levels = calculate_levels(handle->n_bytes, (long)power(2,handle->parm1));
-  //printf("levels: %d\n", levels-1);
-  
-  long memsize = handle->n_bytes >> (levels-1);
-  //printf("Smallest memory: %lu\n", memsize);
-  int i=0;
-  while((handle->memptr+(i*memsize)) != freeaddr){
-    i++;
-    if(i*memsize>handle->n_bytes){
-      printf("buddy_free: invalid memory address\n");
-      return;
-    }
-  }
-  //printf("memptr: %p; freemem: %p\n", handle->memptr, freeaddr);
-  //printf("Freeing Memory at level %d, subindex %d\n", levels-1, i);
-  int bitmap[handle->overhead * 8];
-  encode_bitmap(handle->memptr-handle->overhead, handle->overhead, bitmap);
-  
-  int bitindex = power(2,levels-1)+i-1;
-  //printf("bitmap indx: %d\n", bitindex);
-  while(bitmap[bitindex] != 1){
-    bitindex=bitindex>>1;
-  }
-  printf("Freeing Bitmap index: %d at address %p\n", bitindex, freeaddr);
-  bitmap[bitindex] = 0;
-  
-  decode_bitmap(handle->memptr-handle->overhead, handle->overhead, bitmap);
-}
-
 
 void *find_memory(long idx, info_p handle){
   int i=0;
@@ -75,9 +36,8 @@ void *find_memory(long idx, info_p handle){
   //calculate level of indx and subindex
   while(i<=handle->parm1){
     int k=0;
-    for(k=1;k<j+1;k++){
-      //printf("k: %d, idx-prev: %lu\n", k, (idx-(long)prev)+1);
-      if((long)k == (idx-(long)prev)+1){
+    for(k=0;k<j;k++){
+      if((long)k == (idx-(long)prev)){
 	subindx = k;
 	break;
       }
@@ -88,13 +48,12 @@ void *find_memory(long idx, info_p handle){
     j=power(2,i);
     prev = j-1;
   }
-  if(subindx == 0) return NULL;
-  //printf("found: level: %d, subindx: %d\n", i, subindx-1);
+  //printf("found: level: %d, subindx: %d\n", i, subindx);
   long lvlsize = handle->n_bytes >> i;
-  //printf("Level Size: %d\n", (int)lvlsize);
-  long actualoffset = lvlsize*(long)(subindx-1);
-  printf("Bitmap: Offset from base: %lu\n", actualoffset);
-  return handle->memptr+actualoffset;
+  printf("Level Size: %d\n");
+
+
+  return NULL;
 }
 
 int find_bit(int *bitmap, long idx, long lvlsize, long size, long min_size){
